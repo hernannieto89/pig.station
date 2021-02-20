@@ -24,17 +24,20 @@ class RulesResource(Resource):
     def post(self):
         data = request.json
 
-        rule_name = data["name"]
-        job_id = data["job_id"]
-        frecuency = data["frecuency"]
-        conditions = data["conditions"]
-        actions_dict = data["actions_dict"]
-        relays_used = data["relays_used"]
-        active = data["active"]
+        rule_name = data.get("name")
+        job_id = data.get("job_id")
+        frecuency = data.get("frecuency")
+        cron_frecuency = data.get("cron_frecuency")
+        conditions = data.get("conditions")
+        actions_dict = data.get("actions_dict")
+        relays_used = data.get("relays_used")
+        active = data.get("active")
+        rule_type = data.get("rule_type", "interval")
+
 
         try:
             new_rule = Rule(
-                name=rule_name, job_id=job_id, frecuency=frecuency, conditions=conditions, actions_dict=actions_dict, relays_used=relays_used, active=bool(active)
+                name=rule_name, job_id=job_id, frecuency=frecuency, cron_frecuency=cron_frecuency, conditions=conditions, actions_dict=actions_dict, relays_used=relays_used, active=bool(active), rule_type=rule_type,
             )
             db.session.add(new_rule)
             db.session.commit()
@@ -51,11 +54,20 @@ class RuleResource(Resource):
         rule = Rule.query.get(rule_id)
         return repr(rule)
 
-    def delete(self, rule_id):
+    def post(self, rule_name, rule_id):
+        rule = Rule.query.get(rule_id)
+        if rule.job_id is not None:
+            rule.stop_job()
+        else:
+            rule.start_job()
+        db.session.commit()
+
+    def delete(self, rule_name, rule_id):
         rule = Rule.query.get(rule_id)
         if rule is None:
             raise NotFound(f"Rule with ID {rule_id} does not exist")
         try:
+            rule.stop_job()
             db.session.delete(rule)
             db.session.commit()
         except Exception as e:
