@@ -45,17 +45,17 @@ class Rule(db.Model):
     def _parse_kwargs(self, rule_type, frecuency, cron_frecuency):
         kwargs = {}
         if rule_type == "interval" and frecuency is not None:
-            if "s" in rule.frecuency:
-                kwargs["seconds"] = eval(rule.frecuency.split("s")[0])
-            if "m" in rule.frecuency:
-                kwargs["minutes"] = eval(rule.frecuency.split("m")[0])
-            if "h" in rule.frecuency:
-                kwargs["hours"] = eval(rule.frecuency.split("h")[0])
+            if "s" in frecuency:
+                kwargs["seconds"] = eval(frecuency.split("s")[0])
+            if "m" in frecuency:
+                kwargs["minutes"] = eval(frecuency.split("m")[0])
+            if "h" in frecuency:
+                kwargs["hours"] = eval(frecuency.split("h")[0])
         elif rule_type == "cron" and cron_frecuency is not None:
             if "s" in cron_frecuency:
-                kwargs["second"] = eval(rule.frecuency.split("s")[0])
+                kwargs["second"] = eval(frecuency.split("s")[0])
             if "m" in cron_frecuency:
-                kwargs["minute"] = eval(rule.frecuency.split("m")[0])
+                kwargs["minute"] = eval(frecuency.split("m")[0])
             if "h" in cron_frecuency:
-                kwargs["hour"] = eval(rule.frecuency.split("h")[0])
+                kwargs["hour"] = eval(frecuency.split("h")[0])
         return kwargs
