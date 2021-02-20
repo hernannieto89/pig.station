@@ -20,7 +20,7 @@ class Rule(db.Model):
 
     def start_job(self):
         job_args = [self.conditions, self.actions_dict]
-        job_kwargs = self._parse_kwargs(self.rule_type, self.frecuency)
+        job_kwargs = self._parse_kwargs(self.rule_type, self.frecuency, self.cron_frecuency)
         if self.job_id is None:
             conn = rpyc.connect('localhost', 12345)
             job = conn.root.add_job(self.rule_type, job_args, **job_kwargs)
@@ -42,7 +42,7 @@ class Rule(db.Model):
             return "Job already stopped"
 
 
-    def _parse_kwargs(rule_type, frecuency):
+    def _parse_kwargs(rule_type, frecuency, cron_frecuency):
         kwargs = {}
         if rule_type == "interval" and frecuency is not None:
             if "s" in rule.frecuency:
@@ -51,7 +51,7 @@ class Rule(db.Model):
                 kwargs["minutes"] = eval(rule.frecuency.split("m")[0])
             if "h" in rule.frecuency:
                 kwargs["hours"] = eval(rule.frecuency.split("h")[0])
-        else if rule_type == "cron" and cron_frecuency is not None:
+        elif rule_type == "cron" and cron_frecuency is not None:
             if "s" in cron_frecuency:
                 kwargs["second"] = eval(rule.frecuency.split("s")[0])
             if "m" in cron_frecuency:
