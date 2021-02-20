@@ -24,15 +24,15 @@ class RulesResource(Resource):
     def post(self):
         data = request.json
 
-        rule_name = data["name"]
-        job_id = data["job_id"]
-        frecuency = data["frecuency"]
-        cron_frecuency = data["cron_frecuency"]
-        conditions = data["conditions"]
-        actions_dict = data["actions_dict"]
-        relays_used = data["relays_used"]
-        active = data["active"]
-        rule_type = data["rule_type"]
+        rule_name = data.get("name")
+        job_id = data.get("job_id")
+        frecuency = data.get("frecuency")
+        cron_frecuency = data.get("cron_frecuency")
+        conditions = data.get("conditions")
+        actions_dict = data.get("actions_dict")
+        relays_used = data.get("relays_used")
+        active = data.get("active")
+        rule_type = data.get("rule_type", "interval")
 
 
         try:
