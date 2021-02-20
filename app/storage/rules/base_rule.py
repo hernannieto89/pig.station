@@ -31,15 +31,16 @@ class Rule(db.Model):
 
     def stop_job(self):
         job_id = self.job_id
+        relays_used = self.relays_used
         if job_id is not None:
             conn = rpyc.connect('localhost', 12345)
-            conn.root.remove_job(job_id)
+            conn.root.remove_job(job_id, relays_used)
             conn.close()
             self.job_id = None
             return "Stoped Job {}".format(job_id)
         else:
             return "Job already stopped"
-        job_kwargs = {}
+
 
     def _parse_kwargs(rule_type, frecuency):
         kwargs = {}
