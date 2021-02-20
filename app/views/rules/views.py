@@ -60,6 +60,7 @@ class RuleResource(Resource):
             rule.stop_job()
         else:
             rule.start_job()
+        db.session.commit()
 
     def delete(self, rule_name, rule_id):
         rule = Rule.query.get(rule_id)

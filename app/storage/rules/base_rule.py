@@ -34,7 +34,8 @@ class Rule(db.Model):
         relays_used = self.relays_used
         if job_id is not None:
             conn = rpyc.connect('localhost', 12345)
-            conn.root.remove_job(job_id, relays_used)
+            conn.root.pause_job(job_id, relays_used)
+            conn.root.remove_job(job_id)
             conn.close()
             self.job_id = None
             return "Stoped Job {}".format(job_id)
