@@ -25,6 +25,7 @@ class Rule(db.Model):
             conn = rpyc.connect('localhost', 12345)
             job = conn.root.add_job(self.rule_type, job_args, **job_kwargs)
             self.job_id = job.id
+            conn.root.start_job(job.id)
             conn.close()
             return "Job {} started".format(self.job_id)
         return "Job {} already running".format(self.job_id)
