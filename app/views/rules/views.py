@@ -61,7 +61,7 @@ class RuleResource(Resource):
         else:
             rule.start_job()
 
-    def delete(self, rule_id):
+    def delete(self, rule_name, rule_id):
         rule = Rule.query.get(rule_id)
         if rule is None:
             raise NotFound(f"Rule with ID {rule_id} does not exist")
