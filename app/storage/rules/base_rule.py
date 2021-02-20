@@ -42,7 +42,7 @@ class Rule(db.Model):
             return "Job already stopped"
 
 
-    def _parse_kwargs(rule_type, frecuency, cron_frecuency):
+    def _parse_kwargs(self, rule_type, frecuency, cron_frecuency):
         kwargs = {}
         if rule_type == "interval" and frecuency is not None:
             if "s" in rule.frecuency:
