@@ -14,7 +14,7 @@ class Rule(db.Model):
     conditions = db.Column(db.String(128), default="[]")
     actions_dict = db.Column(db.String(128), default="{}")
     relays_used = db.Column(db.String(128), default="[]")
-    active = db.Column(db.Boolean, default=True)
+    active = db.Column(db.Boolean, default=False)
     job_id = db.Column(db.String(128), default=None, nullable=True)
     rule_type = db.Column(db.String(128), default="interval")
 
@@ -26,6 +26,7 @@ class Rule(db.Model):
             job = conn.root.add_job(self.rule_type, job_args, **job_kwargs)
             self.job_id = job.id
             conn.root.resume_job(job.id)
+            self.active = True
             conn.close()
             return "Job {} started".format(self.job_id)
         return "Job {} already running".format(self.job_id)
@@ -39,6 +40,7 @@ class Rule(db.Model):
             conn.root.remove_job(job_id)
             conn.close()
             self.job_id = None
+            self.active = False
             return "Stoped Job {}".format(job_id)
         else:
             return "Job already stopped"
