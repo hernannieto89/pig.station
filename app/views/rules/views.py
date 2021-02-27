@@ -25,19 +25,30 @@ class RulesResource(Resource):
         data = request.json
 
         rule_name = data.get("name")
-        job_id = data.get("job_id")
+        job_id = data.get("job_id", None)
         frecuency = data.get("frecuency")
-        cron_frecuency = data.get("cron_frecuency")
         conditions = data.get("conditions")
         actions_dict = data.get("actions_dict")
         relays_used = data.get("relays_used")
-        active = data.get("active")
+        active = data.get("active", False)
         rule_type = data.get("rule_type", "interval")
-
+        work_time = data.get("work_time", 0)
+        sleep_time = data.get("sleep_time", 0)
+        teardown_action = data.get("teardown_action", "")
 
         try:
             new_rule = Rule(
-                name=rule_name, job_id=job_id, frecuency=frecuency, cron_frecuency=cron_frecuency, conditions=conditions, actions_dict=actions_dict, relays_used=relays_used, active=bool(active), rule_type=rule_type,
+                name=rule_name,
+                job_id=job_id,
+                frecuency=frecuency,
+                conditions=conditions,
+                actions_dict=actions_dict,
+                relays_used=relays_used,
+                active=bool(active),
+                rule_type=rule_type,
+                work_time=work_time,
+                sleep_time=sleep_time,
+                teardown_action=teardown_action,
             )
             db.session.add(new_rule)
             db.session.commit()
