@@ -17,7 +17,20 @@ class RulesResource(Resource):
         response = []
         rules = db.session.query(Rule).order_by(Rule.name).all()
         for rule in rules:
-            response.append(rule.__dict__)
+            rule_dict = {
+                "name": rule.name,
+                "job_id": rule.job_id,
+                "frecuency": rule.frecuency,
+                "conditions": rule.conditions,
+                "actions_dict": rule.actions_dict,
+                "relays_used": rule.relays_used,
+                "active": rule.active,
+                "rule_type": rule.rule_type,
+                "work_time": rule.work_time,
+                "sleep_time": rule.sleep_time,
+                "teardown_action": rule.teardown_action
+            }
+            response.append(rule_dict)
         return response
 
     def post(self):
