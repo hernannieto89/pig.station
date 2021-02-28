@@ -50,9 +50,12 @@ class ActionsResource(Resource):
         return {"message": f"New action {action_type} created"}
 
 
-@action_api.route("/<string:action_type>/<int:action_id>/<string:action_mode>")
+@action_api.route("/<string:action_type>/<int:action_id>/")
 class ActiounResource(Resource):
-    def post(self, action_type, action_id, action_mode):
+    def post(self, action_type, action_id):
+        data = request.json
+        action_mode = data["action_mode"]
+
         validate_action_type(action_type)
 
         action = Action.query.get(action_id)
