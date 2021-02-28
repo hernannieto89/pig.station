@@ -48,7 +48,7 @@ class Rule(db.Model):
             return "Job already stopped"
 
 
-    def _parse_kwargs(self, frecuency, work_time, sleep_time, teardown_action):
+    def _parse_kwargs(self, frecuency):
         kwargs = {}
         if frecuency is not None:
             if "s" in frecuency:
