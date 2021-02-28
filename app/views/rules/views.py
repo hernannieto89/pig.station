@@ -14,12 +14,11 @@ rule_api = Namespace("rules", description="rule description")
 @rule_api.route("/")
 class RulesResource(Resource):
     def get(self):
+        response = []
         rules = db.session.query(Rule).order_by(Rule.name).all()
-        grouped_rules = {
-            k: list(map(attrgetter("id"), v))
-            for (k, v) in groupby(rules, attrgetter("name"))
-        }
-        return grouped_rules
+        for rule in rules:
+            response.append(rule.__dict__)
+        return response
 
     def post(self):
         data = request.json
@@ -56,24 +55,48 @@ class RulesResource(Resource):
             print(e)
             raise BadRequest(f"can't create the rule {rule_name}")
 
-        return {"message": f"new {rule_name} created"}
+        return {"message": f"New rule '{rule_name}' created"}
 
 
-@rule_api.route("/<string:rule_name>/<int:rule_id>")
+@rule_api.route("/<int:rule_id>")
 class RuleResource(Resource):
-    def get(self, rule_name, rule_id):
+    def get(self, rule_id):
         rule = Rule.query.get(rule_id)
         return repr(rule)
 
-    def post(self, rule_name, rule_id):
+    def post(self, rule_id):
         rule = Rule.query.get(rule_id)
         if rule.job_id is not None:
             rule.stop_job()
+            action = "stopped"
         else:
             rule.start_job()
+            action = "started"
         db.session.commit()
 
-    def delete(self, rule_name, rule_id):
+        return {"message": "rule {}".format(action)}
+
+    def put(self, rule_id):
+        data = request.json
+        rule = Rule.query.get(rule_id)
+
+        new_settings = {}
+        new_settings["name"] = data.get("name", rule.name)
+        new_settings["frecuency"] = data.get("frecuency", rule.frecuency)
+        new_settings["conditions"] = data.get("conditions", rule.conditions)
+        new_settings["actions_dict"] = data.get("actions_dict", rule.actions_dict)
+        new_settings["relays_used"] = data.get("relays_used", rule.relays_used)
+        new_settings["rule_type"] = data.get("rule_type", rule.rule_type)
+        new_settings["work_time"] = data.get("work_time", rule.work_time)
+        new_settings["sleep_time"] = data.get("sleep_time", rule.sleep_time)
+        new_settings["teardown_action"] = data.get("teardown_action", rule.teardown_action)
+
+        rule.update(new_settings)
+        db.session.commit()
+
+        return {"message": "rule updated"}
+
+    def delete(self, rule_id):
         rule = Rule.query.get(rule_id)
         if rule is None:
             raise NotFound(f"Rule with ID {rule_id} does not exist")

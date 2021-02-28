@@ -20,6 +20,10 @@ class Rule(db.Model):
     sleep_time = db.Column(db.Integer())
     teardown_action = db.Column(db.String(128))
 
+    def update(self, newdata):
+        for key,value in newdata.items():
+            setattr(self,key,value)
+
     def start_job(self):
         job_args = [self.conditions, self.actions_dict, self.work_time, self.sleep_time, self.teardown_action]
         job_kwargs = self._parse_kwargs(self.frecuency)

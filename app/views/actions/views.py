@@ -47,7 +47,7 @@ class ActionsResource(Resource):
             print(e)
             raise BadRequest(f"can't create the action {action_type}")
 
-        return {"message": f"new {action_type} created"}
+        return {"message": f"New action {action_type} created"}
 
 
 @action_api.route("/<string:action_type>/<int:action_id>/<string:action_mode>")
