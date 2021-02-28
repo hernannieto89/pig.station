@@ -3,7 +3,7 @@ from app.drivers.sensors import SensorDriver
 
 
 class ClockDriver(SensorDriver):
-    def initialize(self, pin):
+    def initialize(self, pin=None):
         self.pin = pin
 
     def read(self):
