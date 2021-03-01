@@ -105,7 +105,7 @@ class RuleResource(Resource):
         return {"message": "rule {}".format(action)}
 
     def put(self, rule_id):
-        data = request.json
+        data = request.form
         rule = Rule.query.get(rule_id)
 
         new_settings = {}
