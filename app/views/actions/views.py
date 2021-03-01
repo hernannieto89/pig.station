@@ -53,7 +53,7 @@ class ActionsResource(Resource):
 @action_api.route("/<string:action_type>/<int:action_id>")
 class ActiounResource(Resource):
     def post(self, action_type, action_id):
-        data = request.json
+        data = request.form
         action_mode = data["action_mode"]
 
         validate_action_type(action_type)
