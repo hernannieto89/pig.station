@@ -76,7 +76,21 @@ class RulesResource(Resource):
 class RuleResource(Resource):
     def get(self, rule_id):
         rule = Rule.query.get(rule_id)
-        return repr(rule)
+        rule_dict = {
+                "id": rule.id,
+                "name": rule.name,
+                "job_id": rule.job_id,
+                "frecuency": rule.frecuency,
+                "conditions": rule.conditions,
+                "actions_dict": rule.actions_dict,
+                "relays_used": rule.relays_used,
+                "active": rule.active,
+                "rule_type": rule.rule_type,
+                "work_time": rule.work_time,
+                "sleep_time": rule.sleep_time,
+                "teardown_action": rule.teardown_action
+            }
+        return rule_dict
 
     def post(self, rule_id):
         rule = Rule.query.get(rule_id)
