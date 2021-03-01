@@ -18,6 +18,7 @@ class RulesResource(Resource):
         rules = db.session.query(Rule).order_by(Rule.name).all()
         for rule in rules:
             rule_dict = {
+                "id": rule.id,
                 "name": rule.name,
                 "job_id": rule.job_id,
                 "frecuency": rule.frecuency,
