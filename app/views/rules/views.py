@@ -115,7 +115,7 @@ class RuleResource(Resource):
         if rule is None:
             raise NotFound(f"Rule with ID {rule_id} does not exist")
         try:
-            if rule.active:
+            if rule.job_id is not None:
                 rule.stop_job()
             db.session.delete(rule)
             db.session.commit()
