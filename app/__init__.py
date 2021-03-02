@@ -2,7 +2,7 @@ from flask import Flask
 
 from app.views import api, namespaces
 from app.storage import db
-
+from app.storage.rules import Rule
 
 def create_app():
     app = Flask(__name__)
