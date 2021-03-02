@@ -17,14 +17,16 @@ def create_app():
     # TODO: add config prod/development logic
     app.config.from_object("app.config.development.DevelopmentConfig")
 
+    @app.before_first_request
+    def before_first_request():
+        rules = db.session.query(Rule).all()
+        for rule in rules:
+            rule.job_id = None
+            rule.active = False
+        db.session.commit()
+
     return app
 
-@app.before_first_request
-def before_first_request():
-    rules = db.session.query(Rule).all()
-    for rule in rules:
-        rule.job_id = None
-        rule.active = False
-    db.session.commit()
+
 
 __all__ = ["create_app"]
