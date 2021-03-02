@@ -19,6 +19,12 @@ def create_app():
 
     return app
 
-
+@app.before_first_request
+def before_first_request():
+    rules = db.session.query(Rule).all()
+    for rule in rules:
+        rule.job_id = None
+        rule.active = False
+    db.session.commit()
 
 __all__ = ["create_app"]
