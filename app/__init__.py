@@ -22,7 +22,10 @@ def create_app():
         rules = db.session.query(Rule).all()
         for rule in rules:
             rule.job_id = None
-            rule.active = False
+            if rule.active:
+                print("active rule")
+                rule.active = False
+                rule.start_job()
         db.session.commit()
 
     return app

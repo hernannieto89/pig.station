@@ -28,6 +28,7 @@ class Rule(db.Model):
         job_args = [self.conditions, self.actions_dict, self.work_time, self.sleep_time, self.teardown_action]
         job_kwargs = self._parse_kwargs(self.frecuency)
         if self.job_id is None:
+            print("none job")
             conn = rpyc.connect('localhost', 12345)
             job = conn.root.add_job(self.rule_type, job_args, **job_kwargs)
             self.job_id = job.id
