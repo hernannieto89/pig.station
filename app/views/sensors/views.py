@@ -68,23 +68,17 @@ class SensorResource(Resource):
         read_rate = get_read_rate(sensor_type)
 
         if read_rate is not None:
-            last_read = current_app.sensors_last_read.get(sensor_type, {}).get(sensor_id, None)
+            last_read = current_app.sensors_last_read.get(sensor_id, None)
             if last_read is not None:
                 if check_minutes_passed(last_read["date"], read_rate):
                     value = sensor.read()
-                    if sensor_type in current_app.sensors_last_read.keys():
-                        current_app.sensors_last_read[sensor_type][sensor_id] = {"value": value, "date": time.time()}
-                    else:
-                        current_app.sensors_last_read[sensor_type] = {sensor_id : {"value": value, "date": time.time()}}
+                    current_app.sensors_last_read[sensor_id] = {"value": value, "date": time.time()}
                     return value
                 else:
                     return last_read["value"]
             else:
                 value = sensor.read()
-                if sensor_type in current_app.sensors_last_read.keys():
-                    current_app.sensors_last_read[sensor_type][sensor_id] = {"value":value, "date": time.time()}
-                else:
-                    current_app.sensors_last_read[sensor_type] = {sensor_id : {"value": value, "date": time.time()}}
+                current_app.sensors_last_read[sensor_id] = {"value": value, "date": time.time()}
                 return value
 
         return sensor.read()
