@@ -4,6 +4,7 @@ from app.views import api, namespaces
 from app.storage import db
 from app.storage.rules import Rule
 
+
 def create_app():
     app = Flask(__name__)
     db.init_app(app)
@@ -29,7 +30,6 @@ def create_app():
         db.session.commit()
 
     return app
-
 
 
 __all__ = ["create_app"]
