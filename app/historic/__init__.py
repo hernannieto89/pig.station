@@ -1,7 +1,20 @@
+import json
+import csv
+import os
+
+from datetime import datetime
 from flask_apscheduler import APScheduler
+from app.storage import db
+from app.storage.sensors import Sensor
+
+HISTORIC_ELEGIBLE_SENSORS = ["DHT11", "DHT22"]
+HISTORIC_LOCATION = "/tmp/"
+FILENAME_TEMPLATE = HISTORIC_LOCATION + "/{}_{}.csv"
+DATE_TEMPLATE = "%m/%d/%Y, %H:%M:%S"
+
 
 # MUST BE CALLED AT APP CREATION
-def scheduler_init():
+def scheduler_init(app):
     scheduler = APScheduler()
     scheduler.init_app(app)
     scheduler.start()
@@ -11,20 +24,31 @@ def scheduler_init():
 
 
 def periodic_read():
-    # FETCH SENSORS BY TYPE
-    # FOR EACH SENSOR WRITE OUTPUT TO DISK IF ANY (RETRY LOGIC IF FAILURE)
-    # CSV FORMAT HH DD-MM-YYYY, SENSOR TYPE, SENSOR ID, OUTPUT
-    pass
+    sensors = db.session.query(Sensor).order_by(Sensor.sensor_type).all()
+    for sensor in sensors:
+        if sensor.sensor_type in HISTORIC_ELEGIBLE_SENSORS:
+            data = sensor.read()
+            insert_row(data, sensor.sensor_type, sensor.id)
 
 
 def periodic_clean():
-    # CLEAN ALL FILES CREATED BY periodic_read MONTHLY
-    pass
+    sensors = db.session.query(Sensor).order_by(Sensor.sensor_type).all()
+    for sensor in sensors:
+        if sensor.sensor_type in HISTORIC_ELEGIBLE_SENSORS:
+            delete_file(sensor.sensor_type, sensor.id)
 
 
-def create_image(sensor_type, sensor_id, period):
-    # READ FILE FOR sensor_type AND sensor_id, FOR GIVEN period
-    # CREATE CHART WITH DATA
-    # STORE IN SHARED LOCATION (OVERWRITE OLD IF ANY)
-    # RETURN SHARED LOCATION PATH FOR HUB
-    pass
+def insert_row(data, sensor_type, sensor_id):
+    str_data = json.dumps(data)
+    now = datetime.now()
+    filename = FILENAME_TEMPLATE.format(sensor_type, sensor_id)
+    fields = [now.strftime(DATE_TEMPLATE), sensor_type, sensor_id, str_data]
+    with open(filename, 'a') as f:
+        writer = csv.writer(f)
+        writer.writerow(fields)
+
+
+def delete_file(sensor_type, sensor_id):
+    filename = FILENAME_TEMPLATE.format(sensor_type, sensor_id)
+    if os.path.exists(filename):
+        os.remove(filename)
