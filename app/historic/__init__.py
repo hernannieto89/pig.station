@@ -7,7 +7,7 @@ from flask_apscheduler import APScheduler
 from app.storage import db
 from app.storage.sensors import Sensor
 
-HISTORIC_ELEGIBLE_SENSORS = ["DHT11", "DHT22"]
+HISTORIC_ELEGIBLE_SENSORS = ["DHT11", "DHT22", "Dummy"]
 HISTORIC_LOCATION = "/tmp/"
 FILENAME_TEMPLATE = HISTORIC_LOCATION + "/{}_{}.csv"
 DATE_TEMPLATE = "%m/%d/%Y, %H:%M:%S"
