@@ -19,8 +19,6 @@ def create_app():
 
     @app.before_first_request
     def before_first_request():
-        from flask import current_app
-
         rules = db.session.query(Rule).all()
         for rule in rules:
             rule.job_id = None
@@ -29,7 +27,6 @@ def create_app():
                 rule.active = False
                 rule.start_job()
         db.session.commit()
-        current_app.sensors_last_read = {}
 
     return app
 
