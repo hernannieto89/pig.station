@@ -1,24 +1,19 @@
-import time
-
 from itertools import groupby
 from operator import attrgetter
 
-from flask import request, current_app
+from flask import request
 from flask_restplus import Resource, Namespace
 from werkzeug.exceptions import BadRequest, NotFound, InternalServerError
 
 from app.storage import db
 from app.storage.sensors import Sensor
-from app.drivers import SUPPORTED_SENSORS, SENSORS_READ_RATE
-from app.views.utils import check_minutes_passed
+from app.drivers import SUPPORTED_SENSORS
 
 
 def validate_sensor_type(sensor_type):
     if sensor_type not in SUPPORTED_SENSORS:
         raise BadRequest(f"{sensor_type} unsupported sensor_type")
 
-def get_read_rate(sensor_type):
-    return SENSORS_READ_RATE.get(sensor_type, None)
 
 sensor_api = Namespace("sensors", description="sensor description")
 
