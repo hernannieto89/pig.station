@@ -72,13 +72,15 @@ class SensorResource(Resource):
             if last_read is not None:
                 if check_minutes_passed(last_read["date"], read_rate):
                     value = sensor.read()
-                    current_app.sensors_last_read[sensor_id] = {"value": value, "date": time.time()}
+                    if not value.get("invalid", False):
+                        current_app.sensors_last_read[sensor_id] = {"value": value, "date": time.time()}
                     return value
                 else:
                     return last_read["value"]
             else:
                 value = sensor.read()
-                current_app.sensors_last_read[sensor_id] = {"value": value, "date": time.time()}
+                if not value.get("invalid", False):
+                    current_app.sensors_last_read[sensor_id] = {"value": value, "date": time.time()}
                 return value
 
         return sensor.read()

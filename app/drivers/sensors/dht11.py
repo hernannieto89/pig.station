@@ -10,14 +10,18 @@ class DHT11Driver(SensorDriver):
         self.sensor = self._setup_sensor(pin)
 
     def read(self):
+        result = {"invalid": False}
         try:
             h, t = Adafruit_DHT.read_retry(self.sensor, self.pin)
             self._sanitize([h, t])
+            result["H"] = h
+            result["T"] = t
         except Exception as err:
             print(err)
-            h, t = None
-        finally:
-            return {"H": h, "T": t}
+            result["H"] = None
+            result["T"] = None
+            result["invalid"] = True
+        return result
 
     def _setup_sensor(self, pin):
         GPIO.setwarnings(False)
