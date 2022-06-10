@@ -8,6 +8,7 @@ from flask_apscheduler import APScheduler
 
 def create_app():
     app = Flask(__name__)
+    db.app = app
     db.init_app(app)
     api.init_app(app)
 

@@ -24,7 +24,7 @@ def scheduler_init(app):
 
 
 def periodic_read():
-    with db.app_context():
+    with db.app.app_context():
         sensors = db.session.query(Sensor).order_by(Sensor.sensor_type).all()
         for sensor in sensors:
             if sensor.sensor_type in HISTORIC_ELEGIBLE_SENSORS:
@@ -33,7 +33,7 @@ def periodic_read():
 
 
 def periodic_clean():
-    with db.app_context():
+    with db.app.app_context():
         sensors = db.session.query(Sensor).order_by(Sensor.sensor_type).all()
         for sensor in sensors:
             if sensor.sensor_type in HISTORIC_ELEGIBLE_SENSORS:
