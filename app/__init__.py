@@ -20,7 +20,7 @@ def create_app():
 
     @app.before_first_request
     def before_first_request():
-        from Flask import current_app
+        from flask import current_app
         scheduler_init(current_app)
         rules = db.session.query(Rule).all()
         for rule in rules:

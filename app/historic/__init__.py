@@ -19,23 +19,25 @@ def scheduler_init(app):
     scheduler.init_app(app)
     scheduler.start()
     # USE DATE CONFIGURATION
-    scheduler.add_job(id='periodic-read', func=periodic_read, trigger='interval', seconds=20)
-    scheduler.add_job(id='periodic-clean', func=periodic_clean, trigger='interval', days=30)
+    scheduler.add_job(id='periodic-read', func=periodic_read(app), trigger='interval', seconds=20)
+    #scheduler.add_job(id='periodic-clean', func=periodic_clean(app), trigger='interval', days=30)
 
 
-def periodic_read():
-    sensors = db.session.query(Sensor).order_by(Sensor.sensor_type).all()
-    for sensor in sensors:
-        if sensor.sensor_type in HISTORIC_ELEGIBLE_SENSORS:
-            data = sensor.read()
-            insert_row(data, sensor.sensor_type, sensor.id)
+def periodic_read(app):
+    with app.app_context():
+        sensors = db.session.query(Sensor).order_by(Sensor.sensor_type).all()
+        for sensor in sensors:
+            if sensor.sensor_type in HISTORIC_ELEGIBLE_SENSORS:
+                data = sensor.read()
+                insert_row(data, sensor.sensor_type, sensor.id)
 
 
-def periodic_clean():
-    sensors = db.session.query(Sensor).order_by(Sensor.sensor_type).all()
-    for sensor in sensors:
-        if sensor.sensor_type in HISTORIC_ELEGIBLE_SENSORS:
-            delete_file(sensor.sensor_type, sensor.id)
+def periodic_clean(app):
+    with app.app_context():
+        sensors = db.session.query(Sensor).order_by(Sensor.sensor_type).all()
+        for sensor in sensors:
+            if sensor.sensor_type in HISTORIC_ELEGIBLE_SENSORS:
+                delete_file(sensor.sensor_type, sensor.id)
 
 
 def insert_row(data, sensor_type, sensor_id):
