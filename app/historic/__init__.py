@@ -7,7 +7,7 @@ from flask_apscheduler import APScheduler
 from app.storage import db
 from app.storage.sensors import Sensor
 
-HISTORIC_ELEGIBLE_SENSORS = ["Dummy"] #["DHT11", "DHT22", "Dummy"]
+HISTORIC_ELEGIBLE_SENSORS = ["Dummy", "DHT11"] #["DHT11", "DHT22", "Dummy"]
 HISTORIC_LOCATION = "/home/pi/"
 FILENAME_TEMPLATE = HISTORIC_LOCATION + "{}_{}.csv"
 DATE_TEMPLATE = "%m/%d/%Y, %H:%M:%S"
@@ -19,7 +19,7 @@ def scheduler_init(app):
     scheduler.init_app(app)
     scheduler.start()
     # USE DATE CONFIGURATION
-    scheduler.add_job(periodic_read, [app], trigger='interval', seconds=20)
+    scheduler.add_job(periodic_read, [app], trigger='interval', seconds=60, next_run_time=datetime.now())
     #scheduler.add_job(id='periodic-clean', func=periodic_clean(app), trigger='interval', days=30)
 
 
