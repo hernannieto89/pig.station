@@ -8,7 +8,7 @@ class DevelopmentConfig:
     JOBS = [{"id": "periodic_read", "func": periodic_read, "trigger": "interval", "seconds": 20, "replace_existing": True}]
 
     SCHEDULER_JOBSTORES = {
-        "default": SQLAlchemyJobStore(url="sqlite:////home/pi/test.db")
+        "default": SQLAlchemyJobStore(url="sqlite:////home/pi/jobstore.db")
     }
 
     SCHEDULER_API_ENABLED = True
