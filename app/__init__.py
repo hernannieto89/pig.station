@@ -18,10 +18,10 @@ def create_app():
     # TODO: add config prod/development logic
     app.config.from_object("app.config.development.DevelopmentConfig")
 
-    scheduler_init(app)
-
     @app.before_first_request
     def before_first_request():
+        from Flask import current_app
+        scheduler_init(current_app)
         rules = db.session.query(Rule).all()
         for rule in rules:
             rule.job_id = None
