@@ -23,8 +23,8 @@ def scheduler_init(app):
     #scheduler.add_job(id='periodic-clean', func=periodic_clean(app), trigger='interval', days=30)
 
 
-def periodic_read(app):
-    with app.app_context():
+def periodic_read():
+    with db.app_context():
         sensors = db.session.query(Sensor).order_by(Sensor.sensor_type).all()
         for sensor in sensors:
             if sensor.sensor_type in HISTORIC_ELEGIBLE_SENSORS:
@@ -32,8 +32,8 @@ def periodic_read(app):
                 insert_row(data, sensor.sensor_type, sensor.id)
 
 
-def periodic_clean(app):
-    with app.app_context():
+def periodic_clean():
+    with db.app_context():
         sensors = db.session.query(Sensor).order_by(Sensor.sensor_type).all()
         for sensor in sensors:
             if sensor.sensor_type in HISTORIC_ELEGIBLE_SENSORS:
