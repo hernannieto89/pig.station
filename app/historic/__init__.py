@@ -19,7 +19,7 @@ def scheduler_init(app):
     scheduler.init_app(app)
     scheduler.start()
     # USE DATE CONFIGURATION
-    scheduler.add_job(id='periodic-read', func=periodic_read(app), trigger='interval', seconds=20)
+    scheduler.add_job(id='periodic-read', func=periodic_read, arg=[app], trigger='interval', seconds=20)
     #scheduler.add_job(id='periodic-clean', func=periodic_clean(app), trigger='interval', days=30)
 
 
