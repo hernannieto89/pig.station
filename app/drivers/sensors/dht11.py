@@ -15,16 +15,16 @@ class DHT11Driver(SensorDriver):
         self.sensor = self._setup_sensor(pin)
 
     def read(self):
+        t = None
+        h = None
         try:
             result = self.sensor.read()
-            if result.is_valid():
-                t = "{:.3f} C".format(result.temperature)
-                h = "{:.3f} C".format(result.humidity)
-            else:
-                raise InvalidDHT11Error(result.error_code)
+            t = "{:.3f} C".format(result.temperature)
+            h = "{:.3f} C".format(result.humidity)
+            if not result.is_valid():
+                raise InvalidDHT11Error(result.error_code)  
         except Exception as err:
             print(err)
-            h, t = None
         finally:
             return {"H": h, "T": t}
 
