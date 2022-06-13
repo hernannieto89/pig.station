@@ -20,13 +20,13 @@ class DHT11Driver(SensorDriver):
         try:
             result = self.sensor.read()
             t = "{:.3f} C".format(result.temperature)
-            h = "{:.3f} C".format(result.humidity)
+            h = "{:.3f} %".format(result.humidity)
             if not result.is_valid():
                 raise InvalidDHT11Error(result.error_code)  
         except Exception as err:
             print(err)
         finally:
-            return {"H": h, "T": t}
+            return {"H": h, "T": t, "valid": result.is_valid()}
 
     def _setup_sensor(self, pin):
         GPIO.setwarnings(False)
