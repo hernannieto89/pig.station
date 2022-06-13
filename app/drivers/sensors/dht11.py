@@ -1,7 +1,12 @@
 import RPi.GPIO as GPIO
-import Adafruit_DHT
+import dht11
 
 from app.drivers.sensors import SensorDriver
+
+
+class InvalidDHT11Error(Exception):
+    def __init__(self, error_code, message="Invalid reading - ErrorCode {}"):
+        super().__init__(message.format(error_code))
 
 
 class DHT11Driver(SensorDriver):
@@ -11,8 +16,12 @@ class DHT11Driver(SensorDriver):
 
     def read(self):
         try:
-            h, t = Adafruit_DHT.read_retry(self.sensor, self.pin)
-            self._sanitize([h, t])
+            result = self.sensor.read()
+            if result.is_valid():
+                t = "{:.3f} C".format(result.temperature)
+                h = "{:.3f} C".format(result.humidity)
+            else:
+                raise InvalidDHT11Error(result.error_code)
         except Exception as err:
             print(err)
             h, t = None
@@ -22,8 +31,7 @@ class DHT11Driver(SensorDriver):
     def _setup_sensor(self, pin):
         GPIO.setwarnings(False)
         GPIO.setmode(GPIO.BCM)
-        GPIO.setup(pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-        sensor = Adafruit_DHT.DHT11
+        sensor = dht11.DHT11(pin=pin)
         return sensor
 
     def _sanitize(self, values):
