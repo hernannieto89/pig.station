@@ -3,9 +3,12 @@ from flask import Flask
 from app.views import api, namespaces
 from app.storage import db
 from app.storage.rules import Rule
+from flask_apscheduler import APScheduler
+
 
 def create_app():
     app = Flask(__name__)
+    db.app = app
     db.init_app(app)
     api.init_app(app)
 
@@ -16,7 +19,6 @@ def create_app():
 
     # TODO: add config prod/development logic
     app.config.from_object("app.config.development.DevelopmentConfig")
-
     @app.before_first_request
     def before_first_request():
         rules = db.session.query(Rule).all()
@@ -27,9 +29,10 @@ def create_app():
                 rule.active = False
                 rule.start_job()
         db.session.commit()
-
+    scheduler = APScheduler()
+    scheduler.init_app(app)
+    scheduler.start()
     return app
-
 
 
 __all__ = ["create_app"]
