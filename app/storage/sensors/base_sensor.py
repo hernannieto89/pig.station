@@ -20,7 +20,7 @@ class Sensor(db.Model):
     last_read = db.Column(db.String(256), nullable=True)
     last_read_date = db.Column(db.Integer, nullable=True)
     toggle_historic = db.Column(db.Boolean, default=False)
-    historic_frecuency = db.Column(db.Integer, default=0)
+    historic_frecuency = db.Column(db.Integer, default=300)
 
     def read(self, *args, **kwargs):
         if self.requires_new_read():
