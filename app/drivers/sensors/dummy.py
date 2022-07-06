@@ -7,4 +7,4 @@ class DummyDriver(SensorDriver):
         self.pin = pin
 
     def read(self):
-        return {"Dummy": random.randint(1, 10)}
+        return {"Dummy": random.randint(1, 10), "valid": random.choice([True, False])}

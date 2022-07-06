@@ -13,11 +13,13 @@ class DHT22Driver(SensorDriver):
         try:
             h, t = Adafruit_DHT.read_retry(self.sensor, self.pin)
             self._sanitize([h, t])
+            valid = True
         except Exception as err:
             print(err)
             h, t = None
+            valid = False
         finally:
-            return {"H": h, "T": t}
+            return {"H": h, "T": t, "valid": valid}
 
     def _setup_sensor(self, pin):
         GPIO.setwarnings(False)

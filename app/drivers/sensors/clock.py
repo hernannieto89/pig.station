@@ -8,4 +8,4 @@ class ClockDriver(SensorDriver):
 
     def read(self):
         now = datetime.now()
-        return {"H": now.hour, "M": now.minute, "S": now.second}
+        return {"H": now.hour, "M": now.minute, "S": now.second, "valid": True}
