@@ -11,7 +11,6 @@ def create_app():
     db.app = app
     db.init_app(app)
     api.init_app(app)
-    db.create_all()
 
     for namespace in namespaces:
         api.add_namespace(namespace)
@@ -22,6 +21,7 @@ def create_app():
     app.config.from_object("app.config.development.DevelopmentConfig")
     @app.before_first_request
     def before_first_request():
+        db.create_all()
         rules = db.session.query(Rule).all()
         for rule in rules:
             rule.job_id = None
