@@ -10,6 +10,7 @@ class DHT22Driver(SensorDriver):
         self.sensor = self._setup_sensor(pin)
 
     def read(self):
+        valid = None
         try:
             h, t = Adafruit_DHT.read_retry(self.sensor, self.pin)
             self._sanitize([h, t])
