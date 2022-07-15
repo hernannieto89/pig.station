@@ -1,7 +1,12 @@
 import RPi.GPIO as GPIO
-import Adafruit_DHT
 
+from pigpio_dht import DHT22
 from app.drivers.sensors import SensorDriver
+
+
+class InvalidDHT22Error(Exception):
+    def __init__(self, error_code, message="Invalid reading - ErrorCode {}"):
+        super().__init__(message.format(error_code))
 
 
 class DHT22Driver(SensorDriver):
@@ -10,23 +15,20 @@ class DHT22Driver(SensorDriver):
         self.sensor = self._setup_sensor(pin)
 
     def read(self):
-        valid = None
         try:
-            h, t = Adafruit_DHT.read_retry(self.sensor, self.pin)
-            self._sanitize([h, t])
-            valid = True
+            result = self.sensor.read()
+            if not result.get("valid", False):
+                raise InvalidDHT22Error(result.error_code)
         except Exception as err:
             print(err)
-            h, t = None
-            valid = False
         finally:
-            return {"H": h, "T": t, "valid": valid}
+            return {"H": result.get("humidity"), "T": result.get("temp_c"), "valid": result.get("valid", False)}
 
     def _setup_sensor(self, pin):
         GPIO.setwarnings(False)
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-        sensor = Adafruit_DHT.DHT22
+        sensor = DHT22(pin)
         return sensor
 
     def _sanitize(self, values):
