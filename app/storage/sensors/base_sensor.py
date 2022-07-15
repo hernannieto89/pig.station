@@ -30,7 +30,9 @@ class Sensor(db.Model):
             if read_value.get("valid", False):
                 self.last_read = json.dumps(read_value)
                 self.last_read_date = time.time()
-        return json.loads(self.last_read)
+            return read_value
+        else:
+            return json.loads(self.last_read)
 
     def __repr__(self):
         return f"<Sensor type=({self.sensor_type}) pin=({self.pin})>"
