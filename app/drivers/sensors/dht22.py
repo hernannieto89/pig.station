@@ -1,4 +1,5 @@
 import RPi.GPIO as GPIO
+import pigpio
 
 from pigpio_dht import DHT22
 from app.drivers.sensors import SensorDriver
@@ -25,10 +26,11 @@ class DHT22Driver(SensorDriver):
             return {"H": result.get("humidity"), "T": result.get("temp_c"), "valid": result.get("valid", False)}
 
     def _setup_sensor(self, pin):
+        pi = pigpio.pi()
         GPIO.setwarnings(False)
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-        sensor = DHT22(pin)
+        sensor = DHT22(pin, pi=pi)
         return sensor
 
     def _sanitize(self, values):
