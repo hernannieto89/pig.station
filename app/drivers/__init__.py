@@ -4,6 +4,7 @@ TYPE_TO_DRIVER = {
     "Relay": "RelayDriver",
     "DHT11": "DHT11Driver",
     "Dummy": "DummyDriver",
+    "DummyArduino": "DummyArduinoDriver",
 
 }
 SUPPORTED_SENSORS = list(TYPE_TO_DRIVER.keys())
