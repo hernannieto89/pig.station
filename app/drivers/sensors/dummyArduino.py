@@ -1,3 +1,4 @@
+import time
 import random
 from app.drivers.sensors import SensorDriver, ArduinoLock
 
@@ -9,4 +10,5 @@ class DummyArduinoDriver(SensorDriver):
         with ArduinoLock:
             read = random.randint(1, 10)
             valid = random.choice([True, False])
+            time.sleep(10)
         return {"DummyArduino": read, "valid": valid}
