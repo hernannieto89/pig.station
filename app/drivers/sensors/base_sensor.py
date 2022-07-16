@@ -1,6 +1,6 @@
 import threading
 
-ArduinoLock = threading.lock()
+ArduinoLock = threading.Lock()
 
 class SensorDriver:
     def intialize(self, *args, **kwargs):
