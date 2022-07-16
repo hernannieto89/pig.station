@@ -11,7 +11,7 @@ def create_app():
     db.app = app
     db.init_app(app)
     api.init_app(app)
-
+    db.create_all()
     for namespace in namespaces:
         api.add_namespace(namespace)
 

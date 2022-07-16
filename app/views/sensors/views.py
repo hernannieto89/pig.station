@@ -59,7 +59,10 @@ class SensorResource(Resource):
 
         if sensor is None:
             raise NotFound(f"{sensor_type} with {sensor_id} does not exist")
-        return sensor.read()
+        result = sensor.read()
+        if result.get("valid", False):
+            db.session.commit()
+        return result
 
     def delete(self, sensor_type, sensor_id):
         sensor = Sensor.query.get(sensor_id)
