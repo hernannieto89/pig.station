@@ -1,15 +1,12 @@
 import random
-import uwsgi
-from app.drivers.sensors import SensorDriver
-
+from app.drivers.sensors import SensorDriver, ArduinoLock
 
 class DummyArduinoDriver(SensorDriver):
     def initialize(self, pin=None):
         self.pin = pin
 
     def read(self):
-        uwsgi.lock()
-        read = random.randint(1, 10)
-        valid = random.choice([True, False])
-        uwsgi.unlock()
+        with ArduinoLock:
+            read = random.randint(1, 10)
+            valid = random.choice([True, False])
         return {"DummyArduino": read, "valid": valid}
