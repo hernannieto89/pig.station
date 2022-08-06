@@ -15,7 +15,7 @@ class DummyArduinoDriver(SensorDriver):
 
     def write_read(self, x):
         data = None
-        with serial.Serial(port='/dev/ttyACM0', baudrate=9600, timeout=1) as arduino:
+        with serial.Serial('/dev/ttyACM0', 9600, timeout=1) as arduino:
             time.sleep(0.1)
             if arduino.isOpen():
                 arduino.write(x.encode())
