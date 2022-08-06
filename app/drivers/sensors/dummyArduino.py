@@ -18,7 +18,7 @@ class DummyArduinoDriver(SensorDriver):
         with serial.Serial(port='/dev/ttyACM0', baudrate=9600, timeout=1) as arduino:
             time.sleep(0.1)
             if arduino.isOpen():
-                arduino.write(x)
+                arduino.write(x.encode())
                 time.sleep(0.1)
                 while arduino.inWaiting()==0: pass
                 if arduino.inWaiting()>0:
