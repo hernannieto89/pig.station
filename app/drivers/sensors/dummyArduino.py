@@ -9,11 +9,12 @@ class DummyArduinoDriver(SensorDriver):
     def read(self):
         with ArduinoLock:
             data = self.write_read("ping")
+            print("DATA:")
             print(data)
         return {"DummyArduino": "test", "valid": False}
 
     def write_read(self, x):
-        arduino = serial.Serial(port='/dev/ttyACM0', baudrate=115200, timeout=.1)
+        arduino = serial.Serial(port='/dev/ttyACM0', baudrate=9600, timeout=.1)
         arduino.write(bytes(x, 'utf-8'))
         time.sleep(0.05)
         data = arduino.readline()
