@@ -1,5 +1,5 @@
+import serial
 import time
-import random
 from app.drivers.sensors import SensorDriver, ArduinoLock
 
 class DummyArduinoDriver(SensorDriver):
@@ -8,7 +8,13 @@ class DummyArduinoDriver(SensorDriver):
 
     def read(self):
         with ArduinoLock:
-            read = random.randint(1, 10)
-            valid = random.choice([True, False])
-            time.sleep(10)
-        return {"DummyArduino": read, "valid": valid}
+            data = self.write_read("ping")
+            print(data)
+        return {"DummyArduino": "test", "valid": False}
+
+    def write_read(x, arduino):
+        arduino = serial.Serial(port='COM4', baudrate=115200, timeout=.1)
+        arduino.write(bytes(x, 'utf-8'))
+        time.sleep(0.05)
+        data = arduino.readline()
+        return data
