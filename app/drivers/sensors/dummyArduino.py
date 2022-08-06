@@ -14,11 +14,13 @@ class DummyArduinoDriver(SensorDriver):
             return {"DummyArduino": data, "valid": False}
 
     def write_read(self, x):
-        arduino = serial.Serial(port='/dev/ttyACM0', baudrate=9600, timeout=1)
-        if arduino.isOpen():
-            arduino.write(x.encode())
-            while arduino.inWaiting()==0: pass
-            if arduino.inWaiting()>0:
-                data = arduino.readline()
-                arduino.flushinput()
+        data = None
+        with serial.Serial(port='/dev/ttyACM0', baudrate=9600, timeout=1) as arduino:
+            time.sleep(0.1)
+            if arduino.isOpen():
+                arduino.write(x.encode())
+                while arduino.inWaiting()==0: pass
+                if arduino.inWaiting()>0:
+                    data = str(arduino.readline())
+                    arduino.flushinput()
         return data
