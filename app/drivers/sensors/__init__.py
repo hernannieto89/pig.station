@@ -1,4 +1,4 @@
-from app.drivers.sensors.base_sensor import SensorDriver, ArduinoLock
+from app.drivers.sensors.base_sensor import SensorDriver, ArduinoLock, ArduinoConnector
 from app.drivers.sensors.clock import ClockDriver
 from app.drivers.sensors.dht22 import DHT22Driver
 from app.drivers.sensors.dht11 import DHT11Driver

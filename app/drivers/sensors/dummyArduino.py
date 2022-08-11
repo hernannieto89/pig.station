@@ -1,6 +1,6 @@
 import serial
 import time
-from app.drivers.sensors import SensorDriver, ArduinoLock
+from app.drivers.sensors import SensorDriver, ArduinoLock, ArduinoConnector
 
 class DummyArduinoDriver(SensorDriver):
     def initialize(self, pin=None):
@@ -15,13 +15,11 @@ class DummyArduinoDriver(SensorDriver):
 
     def write_read(self, x):
         data = None
-        with serial.Serial('/dev/ttyACM0', 9600, timeout=1) as arduino:
+        if ArduinoConnector.isOpen():
+            ArduinoConnector.write(x.encode())
             time.sleep(0.1)
-            if arduino.isOpen():
-                arduino.write(x.encode())
-                time.sleep(0.1)
-                while arduino.inWaiting()==0: pass
-                if arduino.inWaiting()>0:
-                    data = str(arduino.readline())
-                    arduino.flushinput()
+            while ArduinoConnector.inWaiting()==0: pass
+            if ArduinoConnector.inWaiting()>0:
+                data = str(ArduinoConnector.readline())
+                ArduinoConnector.flushinput()
         return data
