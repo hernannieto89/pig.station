@@ -21,5 +21,5 @@ class DummyArduinoDriver(SensorDriver):
             while ArduinoConnector.inWaiting()==0: pass
             if ArduinoConnector.inWaiting()>0:
                 data = str(ArduinoConnector.readline())
-                ArduinoConnector.flushinput()
+                ArduinoConnector.reset_input_buffer()
         return data
