@@ -6,7 +6,8 @@ from datetime import datetime
 from app.storage import db
 from app.storage.sensors import Sensor
 
-HISTORIC_ELEGIBLE_SENSORS = ["Dummy", "DHT11"] #["DHT11", "DHT22", "Dummy"]
+# HISTORIC_ELEGIBLE_SENSORS = ["Dummy", "DHT11", "DHT22"]
+HISTORIC_ELEGIBLE_SENSORS = []
 HISTORIC_LOCATION = "/home/pi/"
 FILENAME_TEMPLATE = HISTORIC_LOCATION + "{}_{}.csv"
 DATE_TEMPLATE = "%m/%d/%Y, %H:%M:%S"
