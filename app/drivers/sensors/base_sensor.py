@@ -10,4 +10,3 @@ class SensorDriver:
 
     def read(self):
         raise NotImplementedError
-
